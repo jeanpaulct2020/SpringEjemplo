@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device, initial-scale=1, shrink-to-fit=no">
+		<th:block th:include="fragments/resources"></th:block>
+	</head>
+	<body data-ma-theme="blue">
+		<th:block th:insert="fragments/header"></th:block>
+		<th:block th:insert="fragments/menu"></th:block>
+		
+		<section class="content">
+			<th:block th:insert="fragments/content"></th:block>
+			
+			<th:block th:insert="fragments/footer"></th:block>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,38 @@
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<th:block th:insert="fragments/resources"></th:block>
+</head>
+
+<body data-ma-theme="blue">
+	<th:block th:insert="fragments/header"></th:block>
+	<th:block th:insert="fragments/menu"></th:block>
+	<section class="content">
+
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Reportes</h4>
+				<div class="form-row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<a th:href="@{/reportes/reporte01}" class="btn btn-primary"
+								target="frame">Reporte 01</a>
+						</div>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-md-12">
+						<div class="form-group">
+							<iframe name="frame" width="100%" height="600px"></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<th:block th:insert="fragments/footer"></th:block>
+	</section>
+</body>
+</html>

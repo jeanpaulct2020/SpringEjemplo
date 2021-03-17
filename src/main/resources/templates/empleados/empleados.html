@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	  
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device, initial-scale=1, shrink-to-fit=no">
+		<th:block th:include="fragments/resources"></th:block>
+	</head>
+	
+	<body data-ma-theme="blue">
+		<th:block th:insert="fragments/header"></th:block>
+		<th:block th:insert="fragments/menu"></th:block>
+		
+		<section class="content">
+			<div class="card">
+				<div class="card-body">
+					<h4 class="card-title">Gestionar empleados</h4>
+					
+					<div sec:authorize="isAuthenticated()">Usuario logueado</div>
+					
+					<div sec:authorize="hasRole('ROLE_ADMIN')">es ADMIN</div>
+					<div sec:authorize="hasRole('ROLE_USER')">es USER</div>  
+					
+					Roles: <span sec:athentication="principal.authorities">Roles no encontrados</span>
+					
+					<div class="form-row" sec:authorize="hasAuthority('ADMIN')"> <!-- Para usuario ya de bd -->
+						<div class="col-md-6">
+							<div class="form-group">
+								<a th:href="@{/empleados/nuevo}" class="btn btn-primary">Nuevo empleado</a>
+							</div>
+						</div>
+	
+					</div>
+					
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-body">
+					<div class="table-responsive">
+						<table id="idTableEmpleado" class="table table-bordered">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Empleado</th>
+									<th>DNI</th>
+									<th>Fecha de Nacimiento</th>
+									<th>Tipo</th>
+									<th>Opciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<th:block th:each="empleado :  ${listaEmpleados}">
+									<tr>
+										<td th:text="${empleado.idEmpleado}"></td>
+										<td th:text="${empleado.nombres} + ' ' + ${empleado.apellidos}"></td>
+										<td th:text="${empleado.documento}"></td>
+										<td th:text="${empleado.fechaNacimiento}"></td>
+										<td th:text="${empleado.tipoEmpleado.descripcion}"></td>
+										<td>
+										<a class="btn btn-primary" th:href="@{/empleados/editar/{id}(id=${empleado.idEmpleado})}">
+												<i class="zmdi zmdi-edit zmdi-hc-fw"></i>
+										</a> 
+										<a class="btn btn-danger" href="#" th:onclick="'deleteEmployee(' + ${empleado.idEmpleado} + ')'">
+												<i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+										</a></td>
+									</tr>
+								</th:block>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<script type="text/javascript">
+			
+				$(document).ready( function() {
+					$("#idTableEmpleado").DataTable();
+				});
+			
+				function deleteEmployee(id) {
+					swal({
+						title : 'Esta seguro que desea darlo de baja?',
+						text : 'No podras revertir este hecho!',
+						type : 'warning',
+						showCancelButton : true,
+						buttonsStyling : false,
+						confirmButtonClass : 'btn btn-danger',
+						confirmButtonText : 'Si, darlo de baja!',
+						cancelButtonClass : 'btn btn-secondary',
+						cancelButtonText  : 'Cancelar'
+					}).then(function(result) {
+						if(result.value){
+							$.ajax({
+								url: "/empleados/eliminar/" + id,
+								type: "GET",
+								success: function(){
+									swal("Bien!", "Fue dado de baja correctamente!", "success").then(function(result) {
+										window.location = "/empleados";
+									});
+								},
+								error: function(){
+									swal("Error!", "Intente nuevamente", "error");
+								},
+							})
+							
+						}					
+					});
+				}
+			</script>
+
+		</section>
+	</body>
+	
+</html>

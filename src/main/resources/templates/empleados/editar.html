@@ -1,0 +1,129 @@
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<th:block th:insert="fragments/resources"></th:block>
+</head>
+
+<body data-ma-theme="blue">
+	<th:block th:insert="fragments/header"></th:block>
+	<th:block th:insert="fragments/menu"></th:block>
+	<section class="content">
+
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title">Editar empleado</h4>
+
+				<form th:action="@{/empleados/actualizar/{id}(id=*{idEmpleado})}" th:object="${empleado}"  th:method="post">
+					
+					<div th:if="${error!=null}" th:text="${error}" class="alert alert-danger"></div>
+
+					<div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+						<ul class="list list--check" style="margin-block-end: 0;">
+							<li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+						</ul>
+					</div>
+					
+					<input type="hidden" th:field="*{idEmpleado}" />
+					<div class="form-row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<input type="text" th:field="*{nombres}" class="form-control" placeholder="Nombres" maxlength="50" />
+								<i class="form-group__bar"></i>
+								<div th:if="${#fields.hasErrors('nombres')}" th:errors="*{nombres}" class="invalid-feedback"></div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<input type="text" th:field="*{apellidos}" class="form-control"	placeholder="Apellidos" maxlength="50" />
+								 <i class="form-group__bar"></i>
+								 <div class="alert alert-danger" th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}"></div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<input type="text" th:field="*{documento}" class="form-control" placeholder="Documento" maxlength="10" /> 
+								<i class="form-group__bar"></i>
+								<div  class="alert alert-danger" th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}"></div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<input type="text" th:field="*{fechaNacimiento}" class="validate[required] form-control date-picker hidden-sm-down" placeholder="Fecha de Nacimiento" data-language='es'>
+								<div class="alert alert-danger" th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"></div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Número de hijos</label> 
+								<input type="text" th:field="*{numeroHijos}" class="form-control" placeholder="Número de hijos" maxlength="50" /> 
+								<i class="form-group__bar"></i>
+								<div class="alert alert-danger" th:if="${#fields.hasErrors('numeroHijos')}" th:errors="*{numeroHijos}">Name Error</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Sueldo</label> 
+								<input type="text" th:field="*{sueldo}" class="form-control" placeholder="Sueldo" maxlength="50" /> 
+								<i class="form-group__bar"></i>
+								<div class="alert alert-danger" th:if="${#fields.hasErrors('sueldo')}" th:errors="*{sueldo}">Name Error</div>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label>Tipo Empleado</label> 
+								<select th:field="*{tipoEmpleado.idTipoEmpleado}" class="form-control">
+									<option value="-1">Seleccione</option>
+									<option th:each="tipo: ${listaTipos}" 
+											th:value="${tipo.idTipoEmpleado}" th:text="${tipo.descripcion}" />
+								</select>
+								<div class="alert alert-danger" th:if="${#fields.hasErrors('tipoEmpleado.idTipoEmpleado')}" th:errors="*{tipoEmpleado.idTipoEmpleado}">Name Error</div>
+							</div>
+						</div>						
+                      	
+						<div class="form-group">
+	                        <label>Skills</label>
+	                        <select  id="skills" name="skills"  class="select2" multiple data-placeholder="Seleccione">
+	                        	<option th:each="skill : ${T(com.jeandev.util.Skill).values()}"
+									th:value="${skill}"
+									th:text="${skill.displayValues}"></option>
+	                    	</select>
+	                    </div>			
+                      	
+						<div class="col-md-12">
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary">Actualizar</button>
+								<a class="btn btn-danger" th:href="@{'/empleados'}">Cancelar</a>
+							</div>
+						</div>
+						
+					</div>
+				</form>
+				
+			</div>
+		</div>
+		
+		<script type="text/javascript" th:inline="javascript">
+			$(document).ready( function() {
+				
+				var skills = [[${empleado.skills}]].map(function(item){
+					return item["descripcion"];
+				});
+				
+				$("#skills").val(skills);
+				$("#skills").select2().trigger('change');
+				$(".select2-container").css("width", "100%");
+				
+			});
+		</script>
+		
+	</section>
+</body>
+</html>
